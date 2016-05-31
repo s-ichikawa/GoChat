@@ -32,21 +32,9 @@ func main() {
     var addr = flag.String("host", ":8080", "アプリケーションのアドレス")
     flag.Parse()
 
-    file, _ := ini.LoadFile(".ini")
-    facebook_id, _ := file.Get("FaceBook", "id")
-    facebook_callback, _ := file.Get("FaceBook", "callback")
-    github_id, _ := file.Get("GitHub", "id")
-    github_secret, _ := file.Get("GitHub", "secret")
-    github_callback, _ := file.Get("GitHub", "callback")
-    google_id, _ := file.Get("Google", "id")
-    google_secret, _ := file.Get("Google", "secret")
-    google_callback, _ := file.Get("Google", "callback")
-    gomniauth.SetSecurityKey(signature.RandomKey(64))
-    gomniauth.WithProviders(
-        facebook.New(facebook_id, "", facebook_callback),
-        github.New(github_id, github_secret, github_callback),
-        google.New(google_id, google_secret, google_callback),
-    )
+    // ソーシャルログインの設定
+    socialLogin()
+
     r := newRoom()
     //r.tracer = trace.New(os.Stdout)
     http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
@@ -60,4 +48,29 @@ func main() {
     if err := http.ListenAndServe(*addr, nil); err != nil {
         log.Fatal("ListenAndServe:", err)
     }
+}
+
+func socialLogin()  {
+    file, _ := ini.LoadFile(".ini")
+
+    // Facebook
+    facebook_id, _ := file.Get("FaceBook", "id")
+    facebook_callback, _ := file.Get("FaceBook", "callback_url")
+
+    // GitHub
+    github_id, _ := file.Get("GitHub", "id")
+    github_secret, _ := file.Get("GitHub", "secret")
+    github_callback, _ := file.Get("GitHub", "callback_url")
+
+    // Google
+    google_id, _ := file.Get("Google", "id")
+    google_secret, _ := file.Get("Google", "secret")
+    google_callback, _ := file.Get("Google", "callback_url")
+
+    gomniauth.SetSecurityKey(signature.RandomKey(64))
+    gomniauth.WithProviders(
+        facebook.New(facebook_id, "", facebook_callback),
+        github.New(github_id, github_secret, github_callback),
+        google.New(google_id, google_secret, google_callback),
+    )
 }
