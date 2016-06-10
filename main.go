@@ -59,6 +59,7 @@ func main() {
     })
     http.HandleFunc("/auth/", loginHandler)
     http.Handle("/room", r)
+    http.Handle("/upload", &templateHandler{filename: "upload.html"})
     // チャットルームを開始
     go r.run()
     // Webサーバを起動
