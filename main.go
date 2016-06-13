@@ -43,7 +43,7 @@ func main() {
     // ソーシャルログインの設定
     socialLogin()
 
-    r := newRoom(UseGravatar)
+    r := newRoom(UseFileSystemAvatar)
     //r.tracer = trace.New(os.Stdout)
     http.Handle("/chat", MustAuth(&templateHandler{filename: "chat.html"}))
     http.Handle("/login", &templateHandler{filename: "login.html"})
