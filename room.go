@@ -19,18 +19,15 @@ type room struct {
     clients map[*client]bool
     // tracerはログを受け取ります
     tracer trace.Tracer
-    // avatarはアバター情報を取得します
-    avatar Avatar
 }
 
-func newRoom(avatar Avatar) *room {
+func newRoom() *room {
     return &room{
         forward: make(chan *message),
         join: make(chan *client),
         leave: make(chan *client),
         clients: make(map[*client]bool),
         tracer: trace.Off(),
-        avatar: avatar,
     }
 }
 
